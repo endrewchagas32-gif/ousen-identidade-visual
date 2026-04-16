@@ -172,6 +172,102 @@
     .ditem { display:flex; align-items:center; gap:12px; font-size:13px; color:rgba(245,240,232,.55); }
     .ditem .di { color:var(--gold); font-size:10px; }
     .ditem strong { color:var(--cream); font-weight:600; }
+
+    /* ══════════════════════════════════════ */
+    /* ── MOBILE RESPONSIVE ── */
+    /* ══════════════════════════════════════ */
+    @media (max-width:768px) {
+      /* Chrome */
+      #mark { top:16px; left:20px; font-size:9px; letter-spacing:3px; }
+      #ctr  { top:16px; right:20px; font-size:9px; letter-spacing:1.5px; }
+
+      /* Slides — scroll vertical dentro de cada slide */
+      .slide {
+        padding:56px 24px 72px;
+        align-items:flex-start;
+        overflow-y:auto;
+        -webkit-overflow-scrolling:touch;
+      }
+
+      /* Two-col → stack vertical */
+      .tc { flex-direction:column; gap:28px; }
+      .cr { width:100% !important; flex-shrink:unset; }
+
+      /* Tipografia */
+      .h1 { font-size:28px; }
+      .h2 { font-size:24px; }
+      .bod { font-size:13.5px; line-height:1.72; }
+      .qte { font-size:12.5px; padding:14px 16px; }
+      .lbl { font-size:9px; letter-spacing:3px; }
+      .div { margin:12px 0; }
+
+      /* Capa */
+      #s0 .an[style*="font-size:100px"],
+      #s0 > div:last-child > div:nth-child(2) { font-size:56px !important; letter-spacing:-2px !important; }
+      #s0 .an[style*="font-size:18px"],
+      #s0 > div:last-child > div:last-child { font-size:14px !important; letter-spacing:1px !important; }
+
+      /* Slide 2 título grande */
+      #s1 div[style*="font-size:42px"] { font-size:26px !important; }
+
+      /* Cards conceituais */
+      .ccard { padding:14px 16px; }
+      .ccard-title { font-size:13px; }
+      .ccard-desc { font-size:11px; }
+      .ccard-icon { width:24px; height:24px; font-size:11px; }
+
+      /* Swatches */
+      .sw { padding:8px 10px; gap:10px; }
+      .swc { width:28px; height:28px; }
+      .swn { font-size:11px; }
+      .swh { font-size:10px; }
+      .swd { font-size:9.5px; }
+
+      /* Tags */
+      .tg { font-size:11px; padding:6px 10px; }
+
+      /* Keywords */
+      .kw { font-size:9px; padding:5px 10px; letter-spacing:.5px; }
+
+      /* Dot pattern frame */
+      .dp .frame { inset:16px; }
+
+      /* Shapes menores no mobile */
+      .sh { transform:scale(.5); }
+
+      /* Tipografia showcase */
+      .typo-main { font-size:34px; }
+      .typo-light { font-size:34px; }
+      .typo-sample { font-size:11px; letter-spacing:4px; }
+
+      /* Quote box encerramento */
+      .quote-box { padding:24px 20px; }
+      .quote-box div[style*="font-size:28px"] { font-size:20px !important; }
+
+      /* Imagens nos slides 4 e 5 */
+      .cr img { border-radius:12px; }
+
+      /* Nav */
+      #nav { bottom:16px; gap:10px; }
+      .nb { width:40px; height:40px; }
+      #dots { gap:5px; }
+      .dot { width:6px; height:6px; }
+      .dot.active { width:18px; }
+
+      /* Direction list */
+      .ditem { font-size:12px; gap:8px; }
+    }
+
+    /* Extra small screens */
+    @media (max-width:390px) {
+      .slide { padding:52px 18px 68px; }
+      .h2 { font-size:21px; }
+      .bod { font-size:12.5px; }
+      #s0 > div:last-child > div:nth-child(2) { font-size:44px !important; }
+      #s1 div[style*="font-size:42px"] { font-size:22px !important; }
+      .typo-main, .typo-light { font-size:28px; }
+      .quote-box div[style*="font-size:28px"] { font-size:17px !important; }
+    }
   </style>
 </head>
 <body>
@@ -507,6 +603,27 @@
   });
 
   document.getElementById('progress').style.width = (1/TOTAL*100)+'%';
+
+  // Touch swipe navigation
+  let touchStartX = 0, touchStartY = 0, touchEndX = 0;
+  const slidesEl = document.getElementById('slides');
+
+  slidesEl.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive:true });
+
+  slidesEl.addEventListener('touchend', e => {
+    touchEndX = e.changedTouches[0].screenX;
+    const touchEndY = e.changedTouches[0].screenY;
+    const dx = touchStartX - touchEndX;
+    const dy = Math.abs(touchStartY - touchEndY);
+    // Only trigger if horizontal swipe > 50px and more horizontal than vertical
+    if (Math.abs(dx) > 50 && Math.abs(dx) > dy) {
+      if (dx > 0) go(cur + 1); // swipe left → next
+      else go(cur - 1);        // swipe right → prev
+    }
+  }, { passive:true });
 </script>
 </body>
 </html>
